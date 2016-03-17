@@ -1,0 +1,11 @@
+{
+  "ambientDependencies": {
+    "redis": "registry:dt/redis#0.12.1+20160303114034",
+    "request-promise": "registry:dt/request-promise#0.4.2+20151205121613",
+    "socket.io": "registry:dt/socket.io#1.4.4+20160224211008"
+  },
+  "dependencies": {
+    "lodash": "registry:npm/lodash#4.0.0+20160305082308",
+    "request": "registry:npm/request#2.69.0+20160304121250"
+  }
+}
