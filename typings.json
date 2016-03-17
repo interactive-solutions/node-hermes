@@ -1,10 +1,12 @@
 {
   "ambientDependencies": {
+    "node": "registry:dt/node#4.0.0+20160316171810",
     "redis": "registry:dt/redis#0.12.1+20160303114034",
-    "request-promise": "registry:dt/request-promise#0.4.2+20151205121613",
+    "request-promise": "registry:dt/request-promise#0.4.2+20160316155526",
     "socket.io": "registry:dt/socket.io#1.4.4+20160224211008"
   },
   "dependencies": {
+    "bluebird": "registry:npm/bluebird#3.2.1+20160211005852",
     "lodash": "registry:npm/lodash#4.0.0+20160305082308",
     "request": "registry:npm/request#2.69.0+20160304121250"
   }
