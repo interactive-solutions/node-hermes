@@ -5,7 +5,7 @@
     "name": "Erik Norgren",
     "email": "enorgren90@gmail.com"
   },
-  "main": "app/build/index.js",
+  "main": "dist/hermes.js",
   "dependencies": {
     "lodash": "^3.10.1",
     "redis": "^2.3.1",
@@ -23,7 +23,7 @@
     "run-sequence": "^1.1.5"
   },
   "scripts": {
-    "main": "gulp buildrun",
-    "test": "gulp build && mocha"
+    "main": "gulp compile:typescript",
+    "test": "gulp compile:typescript && mocha"
   }
 }

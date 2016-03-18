@@ -12,15 +12,7 @@ var paths = {
     }
 };
 
-gulp.task('default', ['run']);
-
-gulp.task('ts:run', shell.task([
-    'ts-node src/example.ts'
-]));
-
-gulp.task('run', ['compile:typescript'], shell.task([
-    'node dist/example.js'
-]));
+gulp.task('default', ['compile:typescript']);
 
 gulp.task('watch', function () {
   gulp.watch(paths.tscripts.src, ['compile:typescript']);
