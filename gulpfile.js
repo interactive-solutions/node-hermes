@@ -15,6 +15,14 @@ var paths = {
 
 gulp.task('default', ['compile:typescript']);
 
+gulp.task('test', ['compile:typescript'], shell.task([
+    'node_modules/mocha/bin/mocha'
+]));
+
+gulp.task('test:teamcity',  ['compile:typescript'], shell.task([
+    'node_modules/mocha/bin/mocha --reporter mocha-teamcity-reporter test'
+]));
+
 gulp.task('watch', function () {
   gulp.watch(paths.tscripts.src, ['compile:typescript']);
 });
