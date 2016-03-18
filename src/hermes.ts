@@ -13,7 +13,7 @@ import {UserApi} from "./lib/api/user";
 import {ApiConfig} from "./lib/api/index";
 import {UserCollection} from "./lib/user/user";
 
-export interface HermesConfig {
+export interface HttpConfig {
   listenOnPort:number;
 }
 
@@ -31,7 +31,7 @@ export class Hermes {
 
   private _users:UserCollection;
 
-  constructor(private config:HermesConfig,
+  constructor(private httpConfig:HttpConfig,
               private apiConfig:ApiConfig,
               private socketConfig:SocketServerConfig,
               private redisConfig:RedisConfig) {
@@ -61,9 +61,9 @@ export class Hermes {
 
   run():void {
     // Initiate the web-socket server
-    this.server.listen(this.config.listenOnPort, () => {
+    this.server.listen(this.httpConfig.listenOnPort, () => {
       console.log(`Running process with pid: ${process.pid}`);
-      console.log(`Listening on port: ${this.config.listenOnPort}`)
+      console.log(`Listening on port: ${this.httpConfig.listenOnPort}`)
     });
   }
 
