@@ -6,6 +6,7 @@ var paths = {
     tscripts : {
         src : [
             'src/**/*.ts',
+            'test/**/*.ts',
             'typings/main.d.ts'
         ],
         dest : 'dist'
