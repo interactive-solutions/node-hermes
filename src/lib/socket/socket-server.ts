@@ -28,7 +28,7 @@ export class SocketServer extends EventEmitter {
               private config:SocketServerConfig,
               httpServer:http.Server) {
     super();
-    this.server = socket(httpServer);
+    this.server = socket.listen(httpServer);
 
     this.initSocketServer();
   }
@@ -48,7 +48,7 @@ export class SocketServer extends EventEmitter {
   }
 
   private initSocketServer():void {
-    this.server.on('connection', this.onConnection.bind(this));
+    this.server.sockets.on('connection', this.onConnection.bind(this));
   }
 
   private onConnection(socket:SocketIO.Socket):void {

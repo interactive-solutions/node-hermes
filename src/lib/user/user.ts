@@ -69,7 +69,7 @@ export class UserCollection {
   }
 
   count():number {
-    return _.size(this.users);
+    return _.size<UserEntity>(_.values<UserEntity>(this.users));
   }
 
   each(func:(user:UserEntity) => void) {
