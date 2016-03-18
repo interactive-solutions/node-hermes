@@ -15,7 +15,11 @@ import {UserCollection} from "../user/user";
 
 export interface SocketServerConfig {
   events:string[];
-  maxAuthenticateRetries?:number;
+  maxAuthenticateAttempts?:number;
+}
+
+interface AuthenticationFailedSocket extends SocketIO.Socket {
+  attempts:number;
 }
 
 export class SocketServer extends EventEmitter {
@@ -83,7 +87,17 @@ export class SocketServer extends EventEmitter {
     this.notifyAuthenticationResult(socket, true);
   }
 
-  private onAuthenticationFailed(socket:SocketIO.Socket) {
+  private onAuthenticationFailed(socket:AuthenticationFailedSocket):void {
+    socket.attempts = socket.attempts ? socket.attempts++ : 1;
+
+    if (this.config.maxAuthenticateAttempts && socket.attempts > this.config.maxAuthenticateAttempts) {
+      this.notifyAuthenticationResult(socket, false);
+      socket.emit('socket:closed', {reason: 'Maximum authentication attempts reached'});
+      socket.disconnect(true);
+
+      return;
+    }
+
     socket.once('user:authenticate', this.onUserAuthenticate.bind(this, socket));
 
     this.notifyAuthenticationResult(socket, false);

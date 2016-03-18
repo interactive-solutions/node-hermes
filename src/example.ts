@@ -10,8 +10,8 @@ var hermesConfig = {
 };
 
 var apiConfig = {
-  baseUri: 'api.epulze.dev',
-  apiToken: 'helloWorld'
+  baseUri: 'api.test.dev',
+  apiToken: 'testToken'
 };
 
 var socketServerConfig = {

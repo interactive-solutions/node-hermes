@@ -87,11 +87,13 @@ export class RedisConnection extends EventEmitter {
   }
 
   private onSubscribedToChannel(channel:string) {
+    console.log(`Subscribed to ${channel}`);
     this.subscriptions.push(channel);
     this.emit('redis:subscriber:subscribed', channel);
   }
 
   private onUnsubscribedFromChannel(channel:string) {
+    console.log(`Unsubscribed to ${channel}`);
     this.subscriptions = _.reject(this.subscriptions, (c:string) => c === channel);
     this.emit('redis:subscriber:unsubscribed', channel);
   }
