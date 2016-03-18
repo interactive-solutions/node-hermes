@@ -4,7 +4,7 @@
  */
 
 import {EventEmitter} from "events";
-import {UserEntity} from "../user/entity";
+import {UserEntity} from "../user/user";
 
 export class SocketConnection extends EventEmitter {
   constructor(private _socket:SocketIO.Socket, private _user:UserEntity, private events:string[]) {

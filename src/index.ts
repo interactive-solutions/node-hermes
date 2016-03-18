@@ -5,6 +5,23 @@
 
 import {Hermes} from "./hermes";
 
-var hermes = new Hermes(5000, 'api.epulze.dev', 'helloWorld', 'localhost');
+var hermesConfig = {
+  listenOnPort: 5000
+};
+
+var apiConfig = {
+  baseUri: 'api.epulze.dev',
+  apiToken: 'helloWorld'
+};
+
+var socketServerConfig = {
+  events: []
+};
+
+var redisConfig = {
+  initialSubscribes: ['test1', 'test2']
+};
+
+var hermes = new Hermes(hermesConfig, apiConfig, socketServerConfig, redisConfig);
 
 hermes.run();

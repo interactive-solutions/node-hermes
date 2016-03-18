@@ -1,20 +1,16 @@
 import AbstractApi from './index';
 import * as request from 'request-promise';
 import * as _ from 'lodash';
-import {UserEntity} from "../user/entity";
+import {UserEntity} from "../user/user";
 
 export class UserApi extends AbstractApi {
   authenticate(accessToken:String):Promise<UserEntity> {
-    return this.getUser('/users/me', `Bearer ${accessToken}`);
-  }
-
-  private getUser(route:string, authHeader:string):Promise<UserEntity> {
     return request({
       method: 'GET',
-      uri: this.baseUri + route,
+      uri: this.config.baseUri + this.config.authenticationUri ? this.config.authenticationUri : '/users/me',
       json: true,
       headers: {
-        Authorization: authHeader
+        Authorization: `Bearer ${accessToken}`
       }
     }).then((data:any) => {
       return new UserEntity(data.id);

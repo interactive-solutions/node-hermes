@@ -10,26 +10,37 @@ import * as _ from 'lodash';
 import {EventEmitter} from "events";
 import {UserApi} from "../api/user";
 import {SocketConnection} from "./socket-connection";
-import {UserEntity} from "../user/entity";
+import {UserEntity} from "../user/user";
+import {UserCollection} from "../user/user";
+
+export interface SocketServerConfig {
+  events:string[];
+  maxAuthenticateRetries?:number;
+}
 
 export class SocketServer extends EventEmitter {
 
   private server:SocketIO.Server;
-  private connections:{[key:number]:SocketConnection[]} = {};
+  private _connections:{[key:number]:SocketConnection[]} = {};
 
-  constructor(private userApi:UserApi, httpServer:http.Server, private events:string[] = []) {
+  constructor(private userApi:UserApi,
+              private users:UserCollection,
+              private config:SocketServerConfig,
+              httpServer:http.Server) {
     super();
     this.server = socket(httpServer);
 
     this.initSocketServer();
   }
 
+  get connections():SocketConnection[] {
+    return _.flattenDeep<SocketConnection>(_.values<SocketConnection[]>(this._connections));
+  }
+
   close():void {
     this.removeAllListeners();
 
-    var sockets = _.flattenDeep<SocketConnection>(_.values<SocketConnection[]>(this.connections));
-
-    sockets.forEach((s:SocketConnection) => {
+    this.connections.forEach((s:SocketConnection) => {
       s.socket.emit('hermes:shutdown');
       s.socket.disconnect(true);
       s.destroy();
@@ -52,19 +63,22 @@ export class SocketServer extends EventEmitter {
       .catch(this.onAuthenticationFailed.bind(this, socket, false));
   }
 
-  private onAuthenticationSuccess(user:UserEntity, socket:SocketIO.Socket):void {
-    var connection = new SocketConnection(socket, user, this.events);
+  private onAuthenticationSuccess(u:UserEntity, socket:SocketIO.Socket):void {
+    var user = this.users.has(u.id) ? this.users.get(u.id) : u;
+
+    var connection = new SocketConnection(socket, user, this.config.events);
     connection.once('connection:closed', this.onConnectionClosed.bind(this, connection));
 
-    if (!this.connections[user.id]) {
-      this.connections[user.id] = [];
+    if (!this._connections[user.id]) {
+      this._connections[user.id] = [];
 
+      this.users.add(user);
       this.emit('new:connection', connection);
     } else {
       this.emit('new:socket', connection);
     }
 
-    this.connections[user.id].push(connection);
+    this._connections[user.id].push(connection);
 
     this.notifyAuthenticationResult(socket, true);
   }
@@ -83,11 +97,11 @@ export class SocketServer extends EventEmitter {
   private onConnectionClosed(connection:SocketConnection) {
     var user = connection.user;
 
-    if (!this.connections[user.id]) {
+    if (!this._connections[user.id]) {
       return;
     }
 
-    this.connections[user.id] = _.reject(this.connections[user.id], (s:SocketConnection) => s === connection);
+    this._connections[user.id] = _.reject(this._connections[user.id], (s:SocketConnection) => s === connection);
     connection.destroy();
 
     var socket = connection.socket;
@@ -96,8 +110,8 @@ export class SocketServer extends EventEmitter {
       socket.once('user:authenticate', this.onUserAuthenticate.bind(this));
     }
 
-    if (this.connections[user.id].length === 0) {
-      delete this.connections[user.id];
+    if (this._connections[user.id].length === 0) {
+      delete this._connections[user.id];
     }
   }
 }

@@ -4,9 +4,15 @@
  */
 
 import {EventEmitter} from "events";
-import {RedisClient} from "redis";
-import {createClient} from "redis";
-import {ClientOpts} from "redis";
+import {RedisClient, createClient, ClientOpts} from "redis";
+import * as _ from'lodash';
+
+export interface RedisConfig {
+  port?:number;
+  host?:string;
+  initialSubscribes?:string[];
+  connectionConfig?:ClientOpts;
+}
 
 /**
  * Wrapper around a bidirectional Redis connection
@@ -23,14 +29,23 @@ export class RedisConnection extends EventEmitter {
    */
   private subscriber:RedisClient;
 
-  constructor(private host:string, private port:number, private config:ClientOpts, private channels:string[] = []) {
+  /**
+   * Subscriptions
+   */
+  private subscriptions:string[] = [];
+
+  constructor(private config:RedisConfig) {
     super();
     this.connect();
   }
 
   connect() {
-    this.publisher = createClient(this.port, this.host, this.config);
-    this.subscriber = createClient(this.port, this.host, this.config);
+    var port = this.config.port ? this.config.port : 6379;
+    var host = this.config.host ? this.config.host : 'localhost';
+    var initialSubscribes:string[] = this.config.initialSubscribes ? this.config.initialSubscribes : [];
+
+    this.publisher = createClient(port, host, this.config.connectionConfig);
+    this.subscriber = createClient(port, host, this.config.connectionConfig);
 
     this.subscriber.on('error', this.onError.bind(this));
     this.subscriber.on('connect', this.onSubscribeConnected.bind(this));
@@ -38,7 +53,7 @@ export class RedisConnection extends EventEmitter {
     this.subscriber.on('subscribe', this.onSubscribedToChannel.bind(this));
     this.subscriber.on('unsubscribe', this.onUnsubscribedFromChannel.bind(this));
 
-    this.channels.forEach((c:string) => this.subscriber.subscribe(c));
+    initialSubscribes.forEach((c:string) => this.subscriber.subscribe(c));
 
     this.publisher.on('error', this.onError.bind(this));
     this.publisher.on('connect', this.onPublishedConnected.bind(this));
@@ -51,11 +66,15 @@ export class RedisConnection extends EventEmitter {
   }
 
   subscribe(channel:string) {
-    this.subscriber.subscribe(channel);
+    if (this.subscriptions.indexOf(channel) < 0) {
+      this.subscriber.subscribe(channel);
+    }
   }
 
   unsubscribe(channel:string) {
-    this.subscriber.unsubscribe(channel);
+    if (this.subscriptions.indexOf(channel) > -1) {
+      this.subscriber.unsubscribe(channel);
+    }
   }
 
   publish(channel:string, data:any) {
@@ -68,10 +87,12 @@ export class RedisConnection extends EventEmitter {
   }
 
   private onSubscribedToChannel(channel:string) {
+    this.subscriptions.push(channel);
     this.emit('redis:subscriber:subscribed', channel);
   }
 
   private onUnsubscribedFromChannel(channel:string) {
+    this.subscriptions = _.reject(this.subscriptions, (c:string) => c === channel);
     this.emit('redis:subscriber:unsubscribed', channel);
   }
 

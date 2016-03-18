@@ -1,5 +1,3 @@
-///<reference path='../typings/browser.d.ts'/>
-
 /**
  * @author Erik Norgren <erik.norgren@interactivesolutions.se>
  * @copyright Interactive Solutions
@@ -9,10 +7,15 @@ import * as http from 'http';
 import * as redis from 'redis';
 import * as socket from 'socket.io';
 
-import {SocketServer} from "./lib/socket/socket-server";
-import {RedisConnection} from "./lib/redis/redis-connection";
-import {ClientOpts} from "redis";
+import {SocketServer, SocketServerConfig} from "./lib/socket/socket-server";
+import {RedisConnection, RedisConfig} from "./lib/redis/redis-connection";
 import {UserApi} from "./lib/api/user";
+import {ApiConfig} from "./lib/api/index";
+import {UserCollection} from "./lib/user/user";
+
+export interface HermesConfig {
+  listenOnPort:number;
+}
 
 export class Hermes {
 
@@ -21,34 +24,46 @@ export class Hermes {
 
   // Socket related
   private server:http.Server;
-  private socketServer:SocketServer;
+  private _socketServer:SocketServer;
 
   // Redis related
-  private redisConnection:RedisConnection;
+  private _redisConnection:RedisConnection;
 
-  constructor(private listenOnPort:number,
-              private apiUri:string,
-              private apiToken = null,
-              socketEvents:string[],
-              redisHost:string,
-              redisPort:number = 6379,
-              redisConfig:ClientOpts = {},
-              redisChannels:string[] = []) {
-    this.userApi = new UserApi(apiUri, apiToken);
+  private _users:UserCollection;
+
+  constructor(private config:HermesConfig,
+              private apiConfig:ApiConfig,
+              private socketConfig:SocketServerConfig,
+              private redisConfig:RedisConfig) {
+    this._users = new UserCollection();
+
+    this.userApi = new UserApi(apiConfig);
 
     this.server = http.createServer();
-    this.socketServer = new SocketServer(this.userApi, this.server, socketEvents);
+    this._socketServer = new SocketServer(this.userApi, this._users, this.socketConfig, this.server);
 
-    this.redisConnection = new RedisConnection(redisHost, redisPort, redisConfig, redisChannels);
+    this._redisConnection = new RedisConnection(redisConfig);
 
     this.init();
   }
 
+  get users():UserCollection {
+    return this._users;
+  }
+
+  get socketServer():SocketServer {
+    return this._socketServer;
+  }
+
+  get redisConnection():RedisConnection {
+    return this._redisConnection;
+  }
+
   run():void {
     // Initiate the web-socket server
-    this.server.listen(this.listenOnPort, () => {
+    this.server.listen(this.config.listenOnPort, () => {
       console.log(`Running process with pid: ${process.pid}`);
-      console.log(`Listening on port: ${this.listenOnPort}`)
+      console.log(`Listening on port: ${this.config.listenOnPort}`)
     });
   }
 
@@ -60,8 +75,8 @@ export class Hermes {
   private onShutdown():void {
     console.log('Initiating shutdown...');
 
-    this.socketServer.close();
-    this.redisConnection.disconnect();
+    this._socketServer.close();
+    this._redisConnection.disconnect();
 
     this.server.close(() => process.exit());
   }
