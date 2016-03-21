@@ -32,7 +32,7 @@ export class SocketConnection extends EventEmitter {
   }
 
   private onEvent(e:string,...args):void {
-    this.emit(e, this,...args);
+    this.emit(e,...args);
   }
 
   private onUserLogout():void {
