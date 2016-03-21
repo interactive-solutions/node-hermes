@@ -6,7 +6,8 @@
     "declaration": true,
     "removeComments": true,
     "moduleResolution": "node",
-    "sourceMap": true
+    "sourceMap": true,
+    "allowJs": true
   },
   "files": [
     "src/**/*.ts",

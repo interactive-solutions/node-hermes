@@ -32,11 +32,10 @@ export class RedisConnection extends EventEmitter {
   /**
    * Subscriptions
    */
-  private subscriptions:string[] = [];
+  private _subscriptions:string[] = [];
 
   constructor(private config:RedisConfig) {
     super();
-    this.connect();
   }
 
   connect() {
@@ -59,6 +58,10 @@ export class RedisConnection extends EventEmitter {
     this.publisher.on('connect', this.onPublishedConnected.bind(this));
   }
 
+  get subscriptions():string[] {
+    return this._subscriptions;
+  }
+
   disconnect() {
     this.publisher.quit();
     this.subscriber.unsubscribe();
@@ -66,13 +69,13 @@ export class RedisConnection extends EventEmitter {
   }
 
   subscribe(channel:string) {
-    if (this.subscriptions.indexOf(channel) < 0) {
+    if (this._subscriptions.indexOf(channel) < 0) {
       this.subscriber.subscribe(channel);
     }
   }
 
   unsubscribe(channel:string) {
-    if (this.subscriptions.indexOf(channel) > -1) {
+    if (this._subscriptions.indexOf(channel) > -1) {
       this.subscriber.unsubscribe(channel);
     }
   }
@@ -82,19 +85,18 @@ export class RedisConnection extends EventEmitter {
   }
 
   private onSubscribeConnected() {
-    console.log('Subscriber connected');
     this.emit('redis:subscriber:connected');
   }
 
   private onSubscribedToChannel(channel:string) {
     console.log(`Subscribed to ${channel}`);
-    this.subscriptions.push(channel);
+    this._subscriptions.push(channel);
     this.emit('redis:subscriber:subscribed', channel);
   }
 
   private onUnsubscribedFromChannel(channel:string) {
     console.log(`Unsubscribed to ${channel}`);
-    this.subscriptions = _.reject(this.subscriptions, (c:string) => c === channel);
+    this._subscriptions = _.reject(this._subscriptions, (c:string) => c === channel);
     this.emit('redis:subscriber:unsubscribed', channel);
   }
 
@@ -103,7 +105,6 @@ export class RedisConnection extends EventEmitter {
   }
 
   private onPublishedConnected() {
-    console.log('Publisher connected');
     this.emit('redis:publisher:connected');
   }
 

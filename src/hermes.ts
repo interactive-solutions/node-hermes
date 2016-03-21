@@ -60,6 +60,8 @@ export class Hermes {
   }
 
   run():void {
+    this._redisConnection.connect();
+
     // Initiate the web-socket server
     this.server.listen(this.httpConfig.listenOnPort, () => {
       console.log(`Running process with pid: ${process.pid}`);

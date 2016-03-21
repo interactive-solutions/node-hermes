@@ -3,6 +3,9 @@
  * @copyright Interactive Solutions
  */
 
+// No typings
+var SocketMock = require('socket-io-mock');
+
 import * as chai from 'chai';
 
 describe('Socket server', () => {

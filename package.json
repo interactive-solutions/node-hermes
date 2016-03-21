@@ -20,10 +20,11 @@
     "gulp-tslint": "^4.3.3",
     "gulp-typings": "^1.3.0",
     "mocha": "^2.4.5",
+    "mocha-teamcity-reporter": "^1.0.0",
     "run-sequence": "^1.1.5",
+    "socket-io-mock": "^1.0.1",
     "tslint": "^3.6.0",
-    "typescript": "^1.8.9",
-    "mocha-teamcity-reporter": "^1.0.0"
+    "typescript": "^1.8.9"
   },
   "scripts": {
     "main": "gulp compile:typescript",
