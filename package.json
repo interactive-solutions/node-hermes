@@ -27,7 +27,7 @@
     "typescript": "^1.8.9"
   },
   "scripts": {
-    "main": "gulp compile:typescript",
+    "install": "gulp compile:typescript",
     "test": "gulp compile:typescript && mocha"
   }
 }
