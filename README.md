@@ -115,7 +115,7 @@ Basic usage of the Socket Server
 ```javascript
 // Spawn Hermes instance
 var socketServer:SocketServer = hermes.socketServer;
-socketServer.on('new:connection', (connection:SocketConnection) => {
+socketServer.on('new:user', (connection:SocketConnection) => {
     connection.on('test-event', (data:any) => console.log(data));
 });
 

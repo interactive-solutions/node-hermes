@@ -63,11 +63,11 @@ export class SocketServer extends EventEmitter {
     this
       .userApi
       .authenticate(accessToken)
-      .then(this.onAuthenticationSuccess.bind(this, socket, true))
-      .catch(this.onAuthenticationFailed.bind(this, socket, false));
+      .then(this.onAuthenticationSuccess.bind(this, socket))
+      .catch(this.onAuthenticationFailed.bind(this, socket));
   }
 
-  private onAuthenticationSuccess(u:UserEntity, socket:SocketIO.Socket):void {
+  private onAuthenticationSuccess(socket:SocketIO.Socket, u:UserEntity):void {
     var user = this.users.has(u.id) ? this.users.get(u.id) : u;
 
     var connection = new SocketConnection(socket, user, this.config.events);
@@ -77,7 +77,7 @@ export class SocketServer extends EventEmitter {
       this._connections[user.id] = [];
 
       this.users.add(user);
-      this.emit('new:connection', connection);
+      this.emit('new:user', connection);
     } else {
       this.emit('new:socket', connection);
     }

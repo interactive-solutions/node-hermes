@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import {UserEntity} from "../user/user";
 
 export class UserApi extends AbstractApi {
-  authenticate(accessToken:String):Promise<UserEntity> {
+  authenticate(accessToken:string):Promise<UserEntity> {
     return request({
       method: 'GET',
       uri: this.config.baseUri + this.config.authenticationUri ? this.config.authenticationUri : '/users/me',
