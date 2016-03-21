@@ -52,11 +52,10 @@ describe('Redis connection', () => {
   });
 
   it('Should trigger event on unsubscribed from channel', (done) => {
-    connection.subscribe('channel');
-
     connection.on('redis:subscriber:subscribed', (channel:string) => {
       chai.assert.equal(channel, 'channel');
       chai.assert.equal(connection.subscriptions.length, 1);
+
       connection.unsubscribe('channel');
     });
 
@@ -68,17 +67,37 @@ describe('Redis connection', () => {
     });
 
     connection.connect();
+    connection.subscribe('channel');
   });
 
   it('Should trigger event on subscribed event', (done) => {
-    connection.subscribe('channel');
+    connection.on('redis:subscriber:subscribed', (channel:string) => {
+      chai.assert.equal(connection.subscriptions.length, 1);
+      chai.assert.equal(channel, 'channel');
+
+      connection.publish('channel', {
+        int: 1,
+        string: '123',
+        object: {
+          id: 1
+        }
+      });
+    });
 
     connection.on('channel', (data:any) => {
-      chai.assert.equal({data: 'data'}, data);
+      chai.assert.deepEqual({
+        int: 1,
+        string: '123',
+        object: {
+          id: 1
+        }
+      }, data);
 
       done();
     });
 
-    connection.publish('channel', {data: 'data'});
+
+    connection.connect();
+    connection.subscribe('channel');
   });
 });

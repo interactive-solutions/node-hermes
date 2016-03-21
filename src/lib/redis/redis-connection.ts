@@ -63,6 +63,10 @@ export class RedisConnection extends EventEmitter {
   }
 
   disconnect() {
+    this.publisher.removeAllListeners();
+    this.subscriber.removeAllListeners();
+    this.removeAllListeners();
+
     this.publisher.quit();
     this.subscriber.unsubscribe();
     this.subscriber.quit();
@@ -89,13 +93,11 @@ export class RedisConnection extends EventEmitter {
   }
 
   private onSubscribedToChannel(channel:string) {
-    console.log(`Subscribed to ${channel}`);
     this._subscriptions.push(channel);
     this.emit('redis:subscriber:subscribed', channel);
   }
 
   private onUnsubscribedFromChannel(channel:string) {
-    console.log(`Unsubscribed to ${channel}`);
     this._subscriptions = _.reject(this._subscriptions, (c:string) => c === channel);
     this.emit('redis:subscriber:unsubscribed', channel);
   }
