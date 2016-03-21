@@ -88,9 +88,9 @@ export class SocketServer extends EventEmitter {
   }
 
   private onAuthenticationFailed(socket:AuthenticationFailedSocket):void {
-    socket.attempts = socket.attempts ? socket.attempts++ : 1;
+    socket.attempts = socket.attempts ? ++socket.attempts : 1;
 
-    if (this.config.maxAuthenticateAttempts && socket.attempts > this.config.maxAuthenticateAttempts) {
+    if (this.config.maxAuthenticateAttempts && socket.attempts > this.config.maxAuthenticateAttempts - 1) {
       this.notifyAuthenticationResult(socket, false);
       socket.emit('socket:closed', {reason: 'Maximum authentication attempts reached'});
       socket.disconnect(true);

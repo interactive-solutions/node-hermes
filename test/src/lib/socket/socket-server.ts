@@ -35,6 +35,7 @@ describe('Socket server', () => {
   });
 
   afterEach(() => {
+    webSocket.disconnect();
     server.close();
     httpServer.close();
   });
@@ -72,7 +73,6 @@ describe('Socket server', () => {
   it('Should trigger new user event on new user successful authenticate', (done) => {
     server.on('new:user', (connection:SocketConnection) => {
       chai.assert.equal(connection.user.id, 1);
-      chai.assert.equal(webSocket, connection.socket);
 
       done();
     });
@@ -85,14 +85,12 @@ describe('Socket server', () => {
 
     server.on('new:user', (connection:SocketConnection) => {
       chai.assert.equal(connection.user.id, 1);
-      chai.assert.equal(webSocket, connection.socket);
     });
 
     server.on('new:socket', (connection:SocketConnection) => {
       chai.assert.equal(connection.user.id, 1);
-      chai.assert.equal(webSocket, connection.socket);
 
-      webSocketTwo.close();
+      webSocketTwo.disconnect();
 
       done();
     });
@@ -102,14 +100,16 @@ describe('Socket server', () => {
   });
 
   it('Should send socket closed to user if max authentication attempts are reached', (done) => {
+    webSocket.on('user:authenticate', (data:any) => {
+      chai.assert.isFalse(data.success);
 
-  });
+      webSocket.emit('user:authenticate', 'invalid-access-token');
+    });
 
-  it('Should add a user on new user successful authentication', (done) => {
+    webSocket.on('socket:closed', () => {
+      done();
+    });
 
-  });
-
-  it('Should send hermes shutdown event to user on hermes shutdown', (done) => {
-
+    webSocket.emit('user:authenticate', 'invalid-access-token');
   });
 });
