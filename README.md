@@ -1,4 +1,6 @@
 # Node Hermes
+[![Build Status](https://travis-ci.org/interactive-solutions/node-hermes.svg?branch=master)](https://travis-ci.org/interactive-solutions/node-hermes)
+
 A node library written in Typescript, used for communication between front- & backend. 
 Communication between backend and Hermes is done over Redis and communication between frontend and Hermes is done using sockets.
 
