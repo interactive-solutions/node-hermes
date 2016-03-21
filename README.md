@@ -152,5 +152,10 @@ The following parameters are available to be configured:
 - `apiToken` the token sent in the authorization header by Hermes to the backend
 - `authenticationUri` uri used to authenticate and retrieve the user by Hermes, default `/users/me`
 
+## Tests
+To run tests simply install dev-dependencies and run `mocha`.
+
+Note: The socket server will spawn a http server on port 5000, make sure it is not in use.
+
 ## License
 todo
