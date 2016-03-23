@@ -104,8 +104,8 @@ export class SocketServer extends EventEmitter {
   }
 
   private notifyAuthenticationResult(socket:SocketIO.Socket, success:boolean) {
-    this.emit('user:authenticate', {success: success});
-    socket.emit('user:authenticate', {success: success});
+    this.emit('user:authenticated', {success: success});
+    socket.emit('user:authenticated', {success: success});
   }
 
   private onConnectionClosed(connection:SocketConnection) {

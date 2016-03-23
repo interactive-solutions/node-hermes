@@ -41,7 +41,7 @@ describe('Socket server', () => {
   });
 
   it('Should send authentication success to user on successful authentication', (done) => {
-    webSocket.on('user:authenticate', (data:any) => {
+    webSocket.on('user:authenticated', (data:any) => {
       chai.assert.isTrue(data.success);
 
       done();
@@ -51,7 +51,7 @@ describe('Socket server', () => {
   });
 
   it('Should send authentication failed to user on failed authentication', (done) => {
-    webSocket.on('user:authenticate', (data:any) => {
+    webSocket.on('user:authenticated', (data:any) => {
       chai.assert.isFalse(data.success);
 
       done();
@@ -61,7 +61,7 @@ describe('Socket server', () => {
   });
 
   it('Should trigger user authentication event on user authenticate', (done) => {
-    server.on('user:authenticate', (data:any) => {
+    server.on('user:authenticated', (data:any) => {
       chai.assert.isDefined(data.success);
 
       done();
@@ -100,7 +100,7 @@ describe('Socket server', () => {
   });
 
   it('Should send socket closed to user if max authentication attempts are reached', (done) => {
-    webSocket.on('user:authenticate', (data:any) => {
+    webSocket.on('user:authenticated', (data:any) => {
       chai.assert.isFalse(data.success);
 
       webSocket.emit('user:authenticate', 'invalid-access-token');
