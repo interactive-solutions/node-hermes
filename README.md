@@ -99,7 +99,7 @@ a configurable api uri (see `Configuration`) to validate the access token.
 Note: Hermes will only handle one `user:authenticate` event at a time from a specific socket.
 
 ##### Successful
-If the user is authenticated, Hermes will respond with a `user:authenticate` event
+If the user is authenticated, Hermes will respond with a `user:authenticated` event
 over the same socket with data `{success: true}` and also add the socket to the system.
 After successful authentication, all configured events (see `Configuration`) will be
 handled.
@@ -108,7 +108,7 @@ To unregister from the system. The socket must either disconnect or a `user:logo
 must be sent over the socket.
 
 ##### Failed
-If authentication fails, Hermes will respond with a `user:authenticate` event
+If authentication fails, Hermes will respond with a `user:authenticated` event
 over the same socket with data `{success: false}`. If max attempts are exceeded Hermes
 sends a `socket:closed` event and then disconnects the socket.
 
@@ -140,9 +140,9 @@ it is disconnected, default `infinite`
 
 #### Events
 Events triggered by the Socket server:
-- `new:connection` triggered when a new user connects to the system
+- `new:user` triggered when a new user connects to the system
 - `new:socket` triggered when an existing user connects with another socket
-- `user:authenticate` triggered when an authentication has been processed
+- `user:authenticated` triggered when an authentication has been processed
 
 
 ### User Api
