@@ -21,7 +21,7 @@
     "typescript": "^1.8.9"
   },
   "scripts": {
-    "install": "tsc -d typings/main.d.ts src/**/*.ts --outDir dist --target ES5",
+    "postInstall": "tsc -d typings/main.d.ts src/**/*.ts --outDir dist --target ES5",
     "test": "mocha"
   },
 
