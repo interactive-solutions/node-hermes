@@ -27,7 +27,7 @@
     "typescript": "^1.8.9"
   },
   "scripts": {
-    "install": "gulp compile:typescript",
+    "install": "typings install && gulp compile:typescript",
     "test": "gulp compile:typescript && mocha"
   }
 }
