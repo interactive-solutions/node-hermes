@@ -21,9 +21,9 @@
     "typescript": "^1.8.9"
   },
   "scripts": {
-    "postInstall": "typings install && tsc -d typings/main.d.ts test/**/*.ts src/**/*.ts --outDir dist --target ES5",
+    "install": "typings install && rm -fr dist/ typings/browser.d.ts typings/browser/ && tsc",
     "test": "mocha"
   },
 
-  "typings": "dist/hermes.d.ts"
+  "typings": "dist/src/hermes.d.ts"
 }
