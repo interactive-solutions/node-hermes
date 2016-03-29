@@ -21,7 +21,7 @@
     "typescript": "^1.8.9"
   },
   "scripts": {
-    "install": "tsc",
+    "install": "./install.sh",
     "test": "mocha"
   },
   "typings": "dist/src/hermes.d.ts"
