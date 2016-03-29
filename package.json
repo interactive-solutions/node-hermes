@@ -1,6 +1,6 @@
 {
   "name": "node-hermes",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
     "name": "Erik Norgren",
     "email": "enorgren90@gmail.com"
@@ -24,6 +24,5 @@
     "install": "typings install && rm -fr dist/ typings/browser.d.ts typings/browser/ && tsc",
     "test": "mocha"
   },
-
   "typings": "dist/src/hermes.d.ts"
 }
