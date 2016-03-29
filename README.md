@@ -4,6 +4,23 @@
 A node library written in Typescript, used for communication between front- & backend. 
 Communication between backend and Hermes is done over Redis and communication between frontend and Hermes is done using sockets.
 
+## Setup (Typescript)
+To avoid duplicate typings included from other packages, the following typings
+packages must be installed to compile the project:
+- `bluebird` (ambient)
+- `chai` (ambient)
+- `form-data` (ambient)
+- `mocha` (ambient)
+- `node` (ambient)
+- `redis` (ambient)
+- `request` (ambient)
+- `request-promise` (ambient)
+- `socket.io` (ambient)
+- `socket.io-client` (ambient)
+- `lodash`
+
+To ensure the same version, please see `typings.json`.
+
 ## Usage
 Basic example of spawning a Hermes instance.
 ```javascript

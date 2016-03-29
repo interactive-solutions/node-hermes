@@ -1,5 +1,3 @@
-/// <reference path="../typings/main.d.ts"/>
-
 /**
  * @author Erik Norgren <erik.norgren@interactivesolutions.se>
  * @copyright Interactive Solutions
