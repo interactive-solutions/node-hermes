@@ -21,7 +21,7 @@
     "typescript": "^1.8.9"
   },
   "scripts": {
-    "install": "typings install && rm -fr dist/ typings/browser.d.ts typings/browser/ && tsc",
+    "install": "tsc",
     "test": "mocha"
   },
   "typings": "dist/src/hermes.d.ts"
