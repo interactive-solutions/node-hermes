@@ -7,8 +7,7 @@ node_js:
 services:
   - redis-server
 
-before_script:
-  - npm install -g gulp
+before_install:
   - npm install -g typings
-  - typings install
-script: gulp test
+
+script: mocha 

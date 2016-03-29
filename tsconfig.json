@@ -7,10 +7,10 @@
     "removeComments": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "allowJs": true
+    "allowJs": false
   },
-  "files": [
-    "src/**/*.ts",
-    "typings/main.d.ts"
+  "exclude": [
+    "node_modules",
+    "typings/main/"
   ]
 }
