@@ -24,8 +24,5 @@
     "install": "typings install && rm -fr dist/ typings/browser.d.ts typings/browser/ && tsc",
     "test": "mocha"
   },
-  "typings": [
-    "dist/src/hermes.d.ts",
-    "typings/main.d.ts"
-  ]
+  "typings": "dist/src/hermes.d.ts"
 }
