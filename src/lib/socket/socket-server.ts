@@ -51,6 +51,18 @@ export class SocketServer extends EventEmitter {
     });
   }
 
+  notify(user:number, event:string, payload:any):void {
+    if (this._connections[user]) {
+      var connections = this._connections[user];
+
+      connections.forEach((c:SocketConnection) => c.socket.emit(event, payload));
+    }
+  }
+
+  notifyUsers(users:number[], event:string, payload:any):void {
+    users.forEach((u:number) => this.notify(u, event, payload));
+  }
+
   private initSocketServer():void {
     this.server.sockets.on('connection', this.onConnection.bind(this));
   }
