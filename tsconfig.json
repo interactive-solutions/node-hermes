@@ -10,8 +10,10 @@
     "allowJs": false
   },
   "exclude": [
-    "node_modules",
+    "typings/browser",
+    "typings/browser.d.ts",
     "typings/main/",
+    "node_modules",
     "dist"
   ]
 }
