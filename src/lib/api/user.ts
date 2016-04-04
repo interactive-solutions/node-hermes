@@ -7,7 +7,7 @@ export class UserApi extends AbstractApi {
   authenticate(accessToken:string):Promise<UserEntity> {
     return request({
       method: 'GET',
-      uri: this.config.baseUri + this.config.authenticationUri ? this.config.authenticationUri : '/users/me',
+      uri: this.config.baseUri + (this.config.authenticationUri ? this.config.authenticationUri : '/users/me'),
       json: true,
       headers: {
         Authorization: `Bearer ${accessToken}`
