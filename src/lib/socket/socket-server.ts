@@ -133,7 +133,7 @@ export class SocketServer extends EventEmitter {
     var socket = connection.socket;
 
     if (socket.connected) {
-      socket.once('user:authenticate', this.onUserAuthenticate.bind(this));
+      socket.once('user:authenticate', this.onUserAuthenticate.bind(this, socket));
     }
 
     if (this._connections[user.id].length === 0) {
