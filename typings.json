@@ -1,5 +1,5 @@
 {
-  "ambientDependencies": {
+  "globalDependencies": {
     "bluebird": "registry:dt/bluebird#2.0.0+20160316155526",
     "form-data": "registry:dt/form-data#0.0.0+20160316155526",
     "node": "registry:dt/node#4.0.0+20160317120654",
@@ -11,7 +11,7 @@
   "dependencies": {
     "lodash": "registry:npm/lodash#4.0.0+20160305082308"
   },
-  "ambientDevDependencies": {
+  "globalDevDependencies": {
     "chai": "registry:dt/chai#3.4.0+20160317120654",
     "mocha": "registry:dt/mocha#2.2.5+20160317120654",
     "socket.io-client": "registry:dt/socket.io-client#1.4.4+20160317120654"
