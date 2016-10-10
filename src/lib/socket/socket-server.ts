@@ -89,12 +89,12 @@ export class SocketServer extends EventEmitter {
       this._connections[user.id] = [];
 
       this.users.add(user);
+      this._connections[user.id].push(connection);
       this.emit('new:user', connection);
     } else {
+      this._connections[user.id].push(connection);
       this.emit('new:socket', connection);
     }
-
-    this._connections[user.id].push(connection);
 
     this.notifyAuthenticationResult(socket, true);
   }
